@@ -1,6 +1,6 @@
 import React from "react";
 import "./login.css"
-import {Button, Input} from "antd";
+import {message, Button, Input} from "antd";
 import {LoginService} from "../service/LoginService";
 import Title from "antd/es/typography/Title";
 
@@ -19,7 +19,9 @@ export class Login extends React.Component {
 
     handleLogin = (event) => {
         let credentials = {...this.state.credentials};
-        LoginService.login(credentials.login, credentials.password)
+        let err = LoginService.login(credentials.login, credentials.password)
+        err.catch((e) => message.error('Не верный логин или пароль'))
+
     }
 
     render() {
