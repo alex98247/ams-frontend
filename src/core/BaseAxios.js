@@ -10,7 +10,6 @@ export class BaseAxios {
     }
 
     static getBaseHeaders(){
-        console.log(this.headers)
         return this.headers
     }
 }

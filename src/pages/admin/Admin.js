@@ -35,17 +35,8 @@ export class Admin extends React.Component {
                         <Menu.Item key="2" icon={<DesktopOutlined />}>
                             Сотрудники
                         </Menu.Item>
-                        <SubMenu key="sub1" icon={<UserOutlined />} title="Безопасность">
-                            <Menu.Item key="3">Пользователи</Menu.Item>
-                            <Menu.Item key="4">Сотрудники</Menu.Item>
-                            <Menu.Item key="5">Роли</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                            <Menu.Item key="6">Team 1</Menu.Item>
-                            <Menu.Item key="8">Team 2</Menu.Item>
-                        </SubMenu>
                         <Menu.Item key="9" icon={<FileOutlined />}>
-                            Files
+                            Роли
                         </Menu.Item>
                     </Menu>
                 </Sider>
