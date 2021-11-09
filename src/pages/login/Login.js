@@ -20,8 +20,7 @@ export class Login extends React.Component {
     handleLogin = (event) => {
         let credentials = {...this.state.credentials};
         let err = LoginService.login(credentials.login, credentials.password)
-        err.catch((e) => message.error('Не верный логин или пароль'))
-
+        err.then((e) => this.props.history.push('/admin/employee')).catch((e) => message.error('Не верный логин или пароль'))
     }
 
     render() {

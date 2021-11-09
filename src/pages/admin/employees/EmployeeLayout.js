@@ -1,7 +1,9 @@
 import React from "react";
-import {Divider, Layout, List} from "antd";
+import {Button, Divider, Layout, List, message} from "antd";
 import {Content, Header} from "antd/es/layout/layout";
 import {EmployeeService} from "../../service/EmployeeService";
+import {Admin} from "../Admin";
+import {LoginService} from "../../service/LoginService";
 
 export class EmployeeLayout extends React.Component {
 
@@ -9,6 +11,10 @@ export class EmployeeLayout extends React.Component {
 
     componentDidMount() {
         EmployeeService.getAllEmployees().then((response) => this.setState({employees: response.data}))
+    }
+
+    handleAddEmployeeClick = (event) => {
+        this.props.history.push('/admin/employee/details')
     }
 
     data = [
@@ -21,22 +27,20 @@ export class EmployeeLayout extends React.Component {
 
     render() {
         return (
-            <Layout className="site-layout">
-                <Header className="site-layout-background" style={{padding: 0}}/>
-                <Content style={{margin: '0 16px'}}>
-                    <div className="site-layout-background" style={{padding: 24, minHeight: 360}}>
-                        <Divider orientation="left">Large Size</Divider>
-                        <List
-                            size="large"
-                            header={<div>Header</div>}
-                            footer={<div>Footer</div>}
-                            bordered
-                            dataSource={this.data}
-                            renderItem={item => <List.Item>{item}</List.Item>}
-                        />
-                    </div>
-                </Content>
-            </Layout>
+            <Admin>
+                <Button onClick={this.handleAddEmployeeClick} style={{marginTop: "10px"}}
+                        type="primary">Добавить</Button>
+                <div className="site-layout-background" style={{padding: 24, minHeight: 360}}>
+                    <Divider orientation="left">Сотрудники</Divider>
+                    <List
+                        size="large"
+                        bordered
+                        dataSource={this.data}
+                        renderItem={item => <List.Item>{item}</List.Item>}
+                    />
+                </div>
+
+            </Admin>
         )
     }
 }
