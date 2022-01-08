@@ -5,6 +5,12 @@ import {EmployeeLayout} from "./pages/admin/employees/EmployeeLayout";
 import "antd/dist/antd.css"
 import {EmployeeDetails} from "./pages/admin/employees/EmployeeDetails";
 import history from './pages/history/history';
+import {StartLayout} from "./pages/start/StartLyaout";
+import {CustomerIdentifyLayout} from "./pages/workflow/identify/CustomerIdentifyLayout";
+import {CustomerCreateLayout} from "./pages/workflow/create/CustomerCreateLayout";
+import {ApplicationLayout} from "./pages/workflow/application/ApplicationLayout";
+import {AssemblyLayout} from "./pages/workflow/assembly/AssemblyLayout";
+import {CheckPaymentLayout} from "./pages/workflow/payment/CheckPaymentLayout";
 
 
 function App() {
@@ -13,6 +19,12 @@ function App() {
             <Router history={history}>
                 <Switch>
                     <Route exact path="/" component={Login}/>
+                    <Route exact path="/start" component={StartLayout}/>
+                    <Route exact path="/customer/identify/:id" component={CustomerIdentifyLayout}/>
+                    <Route exact path="/customer/create/:id" component={CustomerCreateLayout}/>
+                    <Route exact path="/application/:id" component={ApplicationLayout}/>
+                    <Route exact path="/assembly/:id" component={AssemblyLayout}/>
+                    <Route exact path="/payment/:id" component={CheckPaymentLayout}/>
                     <Route exact path="/admin" component={Login}/>
                     <Route exact path="/admin/employee" component={EmployeeLayout}/>
                     <Route path="/admin/employee/details" component={EmployeeDetails}>

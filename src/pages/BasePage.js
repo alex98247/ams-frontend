@@ -1,65 +1,57 @@
-import {Layout, Menu, Breadcrumb} from 'antd';
+import {Layout, Menu} from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
+    FileOutlined
 } from '@ant-design/icons';
 import React from "react";
+import {Content, Header} from "antd/es/layout/layout";
+import history from './history/history';
 
-const {Header, Content, Footer, Sider} = Layout;
-const {SubMenu} = Menu;
+const {Sider} = Layout;
 
 export class BasePage extends React.Component {
     state = {
         collapsed: false,
+        selector: 'employee'
     };
 
-    onCollapse = collapsed => {
-        console.log(collapsed);
-        this.setState({collapsed});
-    };
+    componentDidMount() {
+        let selector = this.getLastItem(window.location.href);
+        this.setState({selector: selector})
+    }
+
+    getLastItem = thePath => thePath.substring(thePath.lastIndexOf('/') + 1)
+
+    onCollapse = collapsed => this.setState({collapsed})
+
+    onTasksClick = (event) => history.push('/start')
+    onUsersClick = (event) => history.push('/admin/user')
+    onRolesClick = (event) => history.push('/admin/role')
 
     render() {
-        const {collapsed} = this.state;
+        const {collapsed, selector} = this.state;
         return (
             <Layout style={{minHeight: '100vh'}}>
                 <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
                     <div className="logo"/>
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                        <Menu.Item key="1" icon={<PieChartOutlined/>}>
-                            Option 1
+                    <Menu theme="dark" defaultSelectedKeys={[selector]} mode="inline">
+                        <Menu.Item onClick={this.onUsersClick} key="user" icon={<PieChartOutlined/>}>
+                            Пользователи
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<DesktopOutlined/>}>
-                            Option 2
+                        <Menu.Item onClick={this.onTasksClick} key="employee" icon={<DesktopOutlined/>}>
+                            Задачи
                         </Menu.Item>
-                        <SubMenu key="sub1" icon={<UserOutlined/>} title="User">
-                            <Menu.Item key="3">Tom</Menu.Item>
-                            <Menu.Item key="4">Bill</Menu.Item>
-                            <Menu.Item key="5">Alex</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub2" icon={<TeamOutlined/>} title="Team">
-                            <Menu.Item key="6">Team 1</Menu.Item>
-                            <Menu.Item key="8">Team 2</Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="9" icon={<FileOutlined/>}>
-                            Files
+                        <Menu.Item onClick={this.onRolesClick} key="role" icon={<FileOutlined/>}>
+                            Роли
                         </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">
                     <Header className="site-layout-background" style={{padding: 0}}/>
                     <Content style={{margin: '0 16px'}}>
-                        <Breadcrumb style={{margin: '16px 0'}}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <div className="site-layout-background" style={{padding: 24, minHeight: 360}}>
-                            Bill is a cat.
-                        </div>
+                        {this.props.children}
                     </Content>
-                    <Footer style={{textAlign: 'center'}}>Ant Design ©2018 Created by Ant UED</Footer>
                 </Layout>
             </Layout>
         );
