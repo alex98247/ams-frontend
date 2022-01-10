@@ -4,10 +4,12 @@ import {BasePage} from "../../BasePage";
 import Search from "antd/es/input/Search";
 import {LegalEntityService} from "../../service/LegalEntityService";
 import {WorkflowService} from "../../service/WorkflowService";
+import {ApplicationService} from "../../service/ApplicationService";
+import {LoginService} from "../../service/LoginService";
 
 export class CustomerIdentifyLayout extends React.Component {
 
-    state = {customers: [], data: {search: 'ООО Ромашка'}, selected: {name: '', inn: ''}};
+    state = {customers: [], data: {search: 'ООО Ромашка'}, selected: {id: '', name: '', inn: ''}};
 
     handleChange = (event) => {
         const target = event.target;
@@ -29,19 +31,27 @@ export class CustomerIdentifyLayout extends React.Component {
     }
 
     onCreateApplicationClick() {
-        console.log(this.props)
-        WorkflowService.complete({
-            taskId: this.props.match.params.id,
-            variables: {"new": true}
-        }).then((response) => this.props.history.push('/application/'+response.data.id))
+        WorkflowService.getTask(this.props.match.params.id)
+            .then(response => {
+                ApplicationService.upsert({
+                    id: Number(response.data.applicationId),
+                    customerId: this.state.selected.id,
+                    managerUsername: LoginService.getUsername()
+                })
+                    .then(response => {
+                        WorkflowService.complete({
+                            taskId: this.props.match.params.id,
+                            variables: {"new": false}
+                        }).then((response) => this.props.history.push('/application/' + response.data.id))
+                    });
+            });
     }
 
     onCreateCustomerClick() {
-        console.log(this.props)
         WorkflowService.complete({
             taskId: this.props.match.params.id,
             variables: {"new": true}
-        }).then((response) => this.props.history.push('/customer/create/'+response.data.id))
+        }).then((response) => this.props.history.push('/customer/create/' + response.data.id))
     }
 
     render() {
@@ -69,8 +79,10 @@ export class CustomerIdentifyLayout extends React.Component {
                     <p>Название: {this.state.selected.name}</p>
                     <p>ИНН: {this.state.selected.inn}</p>
                 </Card>
-                <Button onClick={() => this.onCreateCustomerClick()} style={{marginTop: '20px'}}>Создать контрагента</Button>
-                <Button onClick={() => this.onCreateApplicationClick()} style={{marginLeft: '20px'}} type="primary">Далее</Button>
+                <Button onClick={() => this.onCreateCustomerClick()} style={{marginTop: '20px'}}>Создать
+                    контрагента</Button>
+                <Button onClick={() => this.onCreateApplicationClick()} style={{marginLeft: '20px'}}
+                        type="primary">Далее</Button>
             </BasePage>
         )
     }

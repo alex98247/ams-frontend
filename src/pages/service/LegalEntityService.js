@@ -13,4 +13,8 @@ export class LegalEntityService {
     static saveLegalEntity(legalEntity) {
         return BaseAxios.getAxios().post("api/legalentity", legalEntity, {headers: BaseAxios.getBaseHeaders()})
     }
+
+    static saveLegalEntityByInn(inn) {
+        return BaseAxios.getAxios().get("api/legalentity/find", {params: {inn: inn}}, {headers: BaseAxios.getBaseHeaders()})
+    }
 }

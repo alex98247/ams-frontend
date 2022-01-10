@@ -5,6 +5,8 @@ import Search from "antd/es/input/Search";
 import {LegalEntitySuggestService} from "../../service/LegalEntitySuggestService";
 import {WorkflowService} from "../../service/WorkflowService";
 import {LegalEntityService} from "../../service/LegalEntityService";
+import {ApplicationService} from "../../service/ApplicationService";
+import {LoginService} from "../../service/LoginService";
 
 export class CustomerCreateLayout extends React.Component {
     emptyCustomer = {
@@ -36,11 +38,24 @@ export class CustomerCreateLayout extends React.Component {
     }
 
     onCreateCustomerClick() {
-        LegalEntityService.saveLegalEntity(this.state.selected)
-        WorkflowService.complete({
-            taskId: this.props.match.params.id,
-            variables: {}
-        }).then((response) => this.props.history.push('/application/' + response.data.id))
+        LegalEntityService.saveLegalEntity(this.state.selected).then(() => {
+            LegalEntityService.saveLegalEntityByInn(this.state.selected.inn).then(resp => {
+                WorkflowService.getTask(this.props.match.params.id)
+                    .then(response => {
+                        ApplicationService.upsert({
+                            id: Number(response.data.applicationId),
+                            customerId: resp.data.id,
+                            managerUsername: LoginService.getUsername()
+                        })
+                            .then(response => {
+                                WorkflowService.complete({
+                                    taskId: this.props.match.params.id,
+                                    variables: {}
+                                }).then((r) => this.props.history.push('/application/' + r.data.id))
+                            });
+                    })
+            })
+        });
     }
 
     render() {
@@ -61,7 +76,8 @@ export class CustomerCreateLayout extends React.Component {
                         bordered
                         dataSource={this.state.customers}
                         renderItem={item => <List.Item
-                            onClick={() => this.onItemClick(item)}>{item.value + ', ' + item.inn + ', ' + item.management.post + ': ' + item.management.name}</List.Item>}
+                            onClick={() => this.onItemClick(item)}>{item.value + ', ' + item.inn + ', ' +
+                        (item.management ? (item.management.post + ': ' + item.management.name) : '')}</List.Item>}
                     />
                     {/*                    <Divider orientation="left">Сотрудники</Divider>
                     <List
@@ -77,7 +93,8 @@ export class CustomerCreateLayout extends React.Component {
                     <p>ОГРН: {this.state.selected.ogrn}</p>
                     <p>КПП: {this.state.selected.kpp}</p>
                 </Card>
-                <Button onClick={() => this.onCreateCustomerClick()} style={{marginTop: '20px'}} type="primary">Создать</Button>
+                <Button onClick={() => this.onCreateCustomerClick()} style={{marginTop: '20px'}}
+                        type="primary">Создать</Button>
                 {/*                <Form
                     style={{marginTop: "50px"}}
                     labelCol={{span: 4}}
@@ -110,4 +127,5 @@ export class CustomerCreateLayout extends React.Component {
             </BasePage>
         )
     }
+
 }

@@ -27,7 +27,7 @@ export class BasePage extends React.Component {
 
     onTasksClick = (event) => history.push('/start')
     onUsersClick = (event) => history.push('/admin/user')
-    onRolesClick = (event) => history.push('/admin/role')
+    onWarehouseClick = (event) => history.push('/warehouse')
 
     render() {
         const {collapsed, selector} = this.state;
@@ -39,11 +39,11 @@ export class BasePage extends React.Component {
                         <Menu.Item onClick={this.onUsersClick} key="user" icon={<PieChartOutlined/>}>
                             Пользователи
                         </Menu.Item>
-                        <Menu.Item onClick={this.onTasksClick} key="employee" icon={<DesktopOutlined/>}>
+                        <Menu.Item onClick={this.onTasksClick} key="task" icon={<DesktopOutlined/>}>
                             Задачи
                         </Menu.Item>
-                        <Menu.Item onClick={this.onRolesClick} key="role" icon={<FileOutlined/>}>
-                            Роли
+                        <Menu.Item onClick={this.onWarehouseClick} key="warehouse" icon={<FileOutlined/>}>
+                            Склад
                         </Menu.Item>
                     </Menu>
                 </Sider>

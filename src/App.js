@@ -11,6 +11,8 @@ import {CustomerCreateLayout} from "./pages/workflow/create/CustomerCreateLayout
 import {ApplicationLayout} from "./pages/workflow/application/ApplicationLayout";
 import {AssemblyLayout} from "./pages/workflow/assembly/AssemblyLayout";
 import {CheckPaymentLayout} from "./pages/workflow/payment/CheckPaymentLayout";
+import {WarehouseLayout} from "./pages/workflow/warehouse/WarehouseLayout";
+import {GoodLayout} from "./pages/workflow/warehouse/GoodLayout";
 
 
 function App() {
@@ -25,6 +27,9 @@ function App() {
                     <Route exact path="/application/:id" component={ApplicationLayout}/>
                     <Route exact path="/assembly/:id" component={AssemblyLayout}/>
                     <Route exact path="/payment/:id" component={CheckPaymentLayout}/>
+                    <Route exact path="/warehouse" component={WarehouseLayout}/>
+                    <Route exact path="/good/:id" component={GoodLayout}/>
+                    <Route exact path="/good" component={GoodLayout}/>
                     <Route exact path="/admin" component={Login}/>
                     <Route exact path="/admin/employee" component={EmployeeLayout}/>
                     <Route path="/admin/employee/details" component={EmployeeDetails}>

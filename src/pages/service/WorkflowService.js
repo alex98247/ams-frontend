@@ -7,10 +7,14 @@ export class WorkflowService {
     }
 
     static startWorkflow(username) {
-        return BaseAxios.getAxios().post("api/workflow/start", null,  {params: {username: username}}, {headers: BaseAxios.getBaseHeaders()})
+        return BaseAxios.getAxios().post("api/workflow/start", null, {params: {username: username}}, {headers: BaseAxios.getBaseHeaders()})
     }
 
     static complete(taskCompleteRequest) {
         return BaseAxios.getAxios().post("api/workflow/complete", taskCompleteRequest, {headers: BaseAxios.getBaseHeaders()})
+    }
+
+    static getTask(id) {
+        return BaseAxios.getAxios().get("api/workflow/" + id, {headers: BaseAxios.getBaseHeaders()})
     }
 }
