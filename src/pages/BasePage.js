@@ -7,6 +7,7 @@ import {
 import React from "react";
 import {Content, Header} from "antd/es/layout/layout";
 import history from './history/history';
+import {LoginService} from "./service/LoginService";
 
 const {Sider} = Layout;
 
@@ -36,15 +37,19 @@ export class BasePage extends React.Component {
                 <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
                     <div className="logo"/>
                     <Menu theme="dark" defaultSelectedKeys={[selector]} mode="inline">
-                        <Menu.Item onClick={this.onUsersClick} key="user" icon={<PieChartOutlined/>}>
-                            Пользователи
+                        <Menu.Item onClick={this.onUsersClick} key="application" icon={<PieChartOutlined/>}>
+                            Заявки
                         </Menu.Item>
                         <Menu.Item onClick={this.onTasksClick} key="task" icon={<DesktopOutlined/>}>
                             Задачи
                         </Menu.Item>
-                        <Menu.Item onClick={this.onWarehouseClick} key="warehouse" icon={<FileOutlined/>}>
-                            Склад
-                        </Menu.Item>
+                        {(LoginService.getAuthorities().indexOf("ADMIN") > -1 || LoginService.getAuthorities().indexOf("ORDER")) ?
+                            <Menu.Item onClick={this.onWarehouseClick} key="warehouse" icon={<FileOutlined/>}>
+                                Склад
+                            </Menu.Item>
+                            :
+                            ''
+                        }
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card, Divider, Form, Input, List, Select, Switch} from "antd";
+import {Button, Divider, Form, Input, Select, Switch} from "antd";
 import {BasePage} from "../../BasePage";
 import {LegalEntityService} from "../../service/LegalEntityService";
 import {WorkflowService} from "../../service/WorkflowService";
@@ -36,11 +36,18 @@ export class ApplicationLayout extends React.Component {
         this.setState({data});
     }
 
-    onCreateCustomerClick() {
-        WorkflowService.complete({
-            taskId: this.props.match.params.id,
-            variables: {"new": true}
-        }).then((response) => this.props.history.push('/customer/create/' + response.data.id))
+    onCreateApplicationClick() {
+        this.state.application.goods = this.state.goodsRender.filter(x => x.id !== '')
+            .reduce((map, obj) => {
+                map[Number(obj.id)] = obj.count;
+                return map;
+            }, {});
+        ApplicationService.upsert(this.state.application).then(() =>
+            WorkflowService.complete({
+                taskId: this.props.match.params.id,
+                variables: {"needDelivery": this.state.application.needDelivery}
+            }).then((response) => this.props.history.push('/start'))
+        )
     }
 
     addMock() {
@@ -52,8 +59,6 @@ export class ApplicationLayout extends React.Component {
     }
 
     handleGoodChange(value, i) {
-        console.log(value)
-        console.log(i)
         let good = this.state.goodsRender[i]
         good.id = value
         if (i === this.state.goodsRender.length - 1) {
@@ -103,12 +108,13 @@ export class ApplicationLayout extends React.Component {
                                 <Option key={good.id}>{good.name}</Option>
                             ))}
                         </Select>
-                        {console.log(x.count)}
-                        <Input onChange={v=>this.handleCountChange(v, i)} name={"input-" + i} style={{marginLeft: 20, width: 60}}
+                        {console.log(x)}
+                        <Input onChange={v => this.handleCountChange(v, i)} name={"input-" + i}
+                               style={{marginLeft: 20, width: 60}}
                                value={x.count}/>
                     </div>
                 )}
-                <Button onClick={() => this.onCreateCustomerClick()} type="primary" style={{marginTop: '20px'}}>Создать
+                <Button onClick={() => this.onCreateApplicationClick()} type="primary" style={{marginTop: '20px'}}>Создать
                     заявку</Button>
             </BasePage>
         )
